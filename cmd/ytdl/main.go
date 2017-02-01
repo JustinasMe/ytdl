@@ -10,11 +10,11 @@ import (
 
 	"encoding/json"
 
+	"github.com/JustinasMe/ytdl"
 	log "github.com/Sirupsen/logrus"
 	"github.com/cheggaaa/pb"
 	"github.com/codegangsta/cli"
 	"github.com/mattn/go-isatty"
-	"github.com/rylio/ytdl"
 )
 
 type options struct {

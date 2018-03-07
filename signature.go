@@ -91,7 +91,7 @@ const (
 		"a\\.splice\\(0,b\\)" +
 		"\\}"
 	swapStr = ":function\\(a,b\\)\\{" +
-		"var c=a\\[0\\];a\\[0\\]=a\\[b%a\\.length\\];a\\[b\\]=c(?:;return a)?" +
+		"var c=a\\[0\\];a\\[0\\]=a\\[b%a\\.length\\];a\\[b(?:%a\\.length)?\\]=c(?:;return a)?" +
 		"\\}"
 )
 
@@ -115,15 +115,12 @@ var swapRegexp = regexp.MustCompile(fmt.Sprintf(
 	"(?m)(?:^|,)(%s)%s", jsvarStr, swapStr))
 
 func getSigTokens(htmlPlayerFile string) ([]string, error) {
-	if strings.Index(htmlPlayerFile, "//") != 0 {
-		htmlPlayerFile = "https://youtube.com" + htmlPlayerFile
-	} else {
-		htmlPlayerFile = "http:" + htmlPlayerFile
+	u, _ := url.Parse(youtubeBaseURL)
+	p, err := url.Parse(htmlPlayerFile)
+	if err != nil {
+		return nil, err
 	}
-
-	fmt.Println("htmlPlayerFile", htmlPlayerFile)
-
-	resp, err := http.Get(htmlPlayerFile)
+	resp, err := http.Get(u.ResolveReference(p).String())
 	if err != nil {
 		return nil, err
 	}
